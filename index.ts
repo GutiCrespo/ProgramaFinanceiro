@@ -1,4 +1,4 @@
-import { AppFinanceiro } from "./classes/Main";
+import { AppFinanceiro } from "./classes/AppFinanceiro";
 
 const app = new AppFinanceiro();
 app.exibirMenuInicial();
