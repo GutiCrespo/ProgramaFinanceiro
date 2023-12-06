@@ -1,5 +1,5 @@
 import { GastoFixo } from "./GastoFixo";
-import { GastoVariavel } from "./GastoVariavel";
+import { GastoParcelado } from "./GastoParcelado";
 import {
   Teclado,
   exibirRelatorio,
@@ -9,12 +9,17 @@ import { Gastos } from "./Gastos";
 
 export class AppFinanceiro {
   gastoFixo: GastoFixo[] = [
-    // new GastoFixo("Hoje", 89, new Date(2023, 11, 6)),
-    // new GastoFixo("7 Dias", 99, new Date(2023, 11, 3)),
-    // new GastoFixo("Este Mês", 89, new Date(2023, 11, 1)),
-    // new GastoFixo("Todo Período", 89, new Date(1998, 3, 21)),
+    new GastoFixo("Hoje", 89, new Date(2023, 11, 6)),
+    new GastoFixo("7 Dias", 99, new Date(2023, 11, 3)),
+    new GastoFixo("Este Mês", 89, new Date(2023, 11, 1)),
+    new GastoFixo("Todo Período", 89, new Date(1998, 3, 21)),
   ];
-  gastoVariavel: GastoFixo[] = [];
+  gastoParcelado: GastoParcelado[] = [
+    new GastoParcelado("Hoje", 89, new Date(2023, 11, 6), 8),
+    new GastoParcelado("7 Dias", 99, new Date(2023, 11, 3), 8),
+    new GastoParcelado("Este Mês", 89, new Date(2023, 11, 1), 8),
+    new GastoParcelado("Todo Período", 89, new Date(1998, 3, 21), 8),
+  ];
 
   exibirMenuInicial(): void {
     let escolha;
@@ -61,7 +66,7 @@ export class AppFinanceiro {
       console.log("Que tipo de gasto você gostaria de trabalhar?\n");
 
       console.log("    1. Gasto Fixo");
-      console.log("    2. Gasto Variavel \n");
+      console.log("    2. Gasto Parcelado \n");
       console.log(`    00. Voltar para o Menu Inicial\n`);
 
       escolha = +Teclado("O que você deseja fazer?  ");
@@ -76,7 +81,7 @@ export class AppFinanceiro {
           break;
 
         case 2:
-          this.inserirNovoGasto(this.gastoVariavel, "variavel");
+          this.inserirNovoGasto(this.gastoParcelado, "parcelado");
           break;
 
         default:
@@ -101,8 +106,9 @@ export class AppFinanceiro {
 
     if (tipo === "fixo") {
       gastos.push(new GastoFixo(nomeGasto, valorGasto, mesGasto));
-    } else if (tipo === "variavel") {
-      gastos.push(new GastoVariavel(nomeGasto, valorGasto, mesGasto));
+    } else if (tipo === "parcelado") {
+      let parcelas = +Teclado("Por favor, insira o número de Parcelas:  ")
+      gastos.push(new GastoParcelado(nomeGasto, valorGasto, mesGasto, parcelas));
     }
 
     exibirRelatorio(gastos);
@@ -122,7 +128,7 @@ export class AppFinanceiro {
       );
 
       console.log("    1. Gastos Fixos");
-      console.log("    2. Gastos Variáveis");
+      console.log("    2. Gastos Parcelados");
       console.log("    3. Todos os tipos");
       console.log("    00. Voltar para o Menu Inicial\n");
 
@@ -135,7 +141,11 @@ export class AppFinanceiro {
           break;
 
         case 2:
-          this.menuRelatorioGastos(this.gastoVariavel);
+          this.menuRelatorioGastos(this.gastoParcelado);
+          break;
+
+        case 3:
+          this.menuRelatorioGastos([...this.gastoParcelado, ...this.gastoFixo]);
           break;
 
         default:
@@ -180,7 +190,6 @@ export class AppFinanceiro {
           break;
 
         case 0:
-          this.exibirMenuInicial();
           break;
 
         default:
